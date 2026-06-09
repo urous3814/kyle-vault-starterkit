@@ -38,6 +38,58 @@ After installing agent skills:
 - Codex can use `kyle-vault-workspace` from `${CODEX_HOME:-$HOME/.codex}/skills/kyle-vault-workspace`.
 - Claude Code can use `kyle-vault-workspace` from `${CLAUDE_HOME:-$HOME/.claude}/skills/kyle-vault-workspace`.
 
+## Agent-Assisted Install
+
+You can give this GitHub link to a coding agent and ask it to install the skill for you:
+
+```text
+https://github.com/urous3814/kyle-vault-starterkit
+```
+
+Use this prompt for Codex or Claude Code:
+
+```text
+Install this starterkit as a local agent skill and then use the kyle-vault-workspace skill to set up this repo:
+
+https://github.com/urous3814/kyle-vault-starterkit
+
+Requirements:
+- Clone the repo into a temporary directory.
+- Read README.md and skill/kyle-vault-workspace/SKILL.md before running scripts.
+- Install the local agent skill for the current agent.
+- If this is Codex, install to ${CODEX_HOME:-$HOME/.codex}/skills/kyle-vault-workspace.
+- If this is Claude Code, install to ${CLAUDE_HOME:-$HOME/.claude}/skills/kyle-vault-workspace.
+- Do not overwrite existing files unless I explicitly approve --force.
+- After installing the skill, use it to configure the current repo/workspace.
+- Ask me for the vault name if it should not be "kyle".
+- Ask me whether to create kyle/06-ops/ONBOARDING.md.
+- Run the starterkit verification scripts and report the installed paths.
+```
+
+If the agent can run shell commands, it can use this implementation outline:
+
+```bash
+tmp="$(mktemp -d)"
+git clone https://github.com/urous3814/kyle-vault-starterkit.git "$tmp/kyle-vault-starterkit"
+cd "$tmp/kyle-vault-starterkit"
+
+# For Codex:
+bash skill/kyle-vault-workspace/scripts/install-starterkit.sh \
+  --repo-root "$PWD" \
+  --skip-repo-files \
+  --skip-vault \
+  --skip-workspace-files \
+  --install-codex-skill
+
+# For Claude Code:
+bash skill/kyle-vault-workspace/scripts/install-starterkit.sh \
+  --repo-root "$PWD" \
+  --skip-repo-files \
+  --skip-vault \
+  --skip-workspace-files \
+  --install-claude-skill
+```
+
 ## Layout
 
 ```text

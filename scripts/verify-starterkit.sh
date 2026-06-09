@@ -60,6 +60,10 @@ grep -q -- '--install-agent-skills' "$starterkit_root/README.md" ||
   fail "README.md must document combined agent skill installation"
 grep -q -- '--skip-repo-files' "$starterkit_root/README.md" ||
   fail "README.md must document skill-only installation without repo files"
+grep -q 'Agent-Assisted Install' "$starterkit_root/README.md" ||
+  fail "README.md must document agent-assisted install from a GitHub link"
+grep -q 'https://github.com/urous3814/kyle-vault-starterkit' "$starterkit_root/README.md" ||
+  fail "README.md must include the GitHub repo URL for agent-assisted install"
 grep -q 'MIT License' "$starterkit_root/LICENSE" ||
   fail "LICENSE must be MIT"
 
