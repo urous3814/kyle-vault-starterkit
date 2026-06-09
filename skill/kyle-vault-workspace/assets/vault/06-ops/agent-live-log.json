@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "append_only": true,
+  "description": "Shared workspace agent live log. Append new entries only; do not edit or delete existing entries.",
+  "entries": []
+}
