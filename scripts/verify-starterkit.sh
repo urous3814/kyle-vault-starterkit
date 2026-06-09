@@ -12,6 +12,14 @@ skill_dir="$starterkit_root/skill/kyle-vault-workspace"
 
 required_files=(
   "$starterkit_root/README.md"
+  "$starterkit_root/LICENSE"
+  "$starterkit_root/SECURITY.md"
+  "$starterkit_root/CONTRIBUTING.md"
+  "$starterkit_root/CODE_OF_CONDUCT.md"
+  "$starterkit_root/.github/workflows/verify.yml"
+  "$starterkit_root/.github/pull_request_template.md"
+  "$starterkit_root/.github/ISSUE_TEMPLATE/bug_report.yml"
+  "$starterkit_root/.github/ISSUE_TEMPLATE/feature_request.yml"
   "$skill_dir/SKILL.md"
   "$skill_dir/scripts/install-starterkit.sh"
   "$skill_dir/scripts/verify-starterkit.sh"
@@ -44,6 +52,8 @@ grep -q 'verify-starterkit.sh' "$starterkit_root/README.md" ||
   fail "README.md must document starterkit verification"
 grep -q -- '--vault-name' "$starterkit_root/README.md" ||
   fail "README.md must document vault name configuration"
+grep -q 'MIT License' "$starterkit_root/LICENSE" ||
+  fail "LICENSE must be MIT"
 
 grep -q '^name: kyle-vault-workspace$' "$skill_dir/SKILL.md" ||
   fail "SKILL.md must define name: kyle-vault-workspace"

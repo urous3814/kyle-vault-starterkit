@@ -145,6 +145,18 @@ This copies the skill to:
 ${CODEX_HOME:-$HOME/.codex}/skills/kyle-vault-workspace
 ```
 
+## Repository Defaults
+
+The standalone GitHub repository includes:
+
+- MIT license
+- security policy
+- contributing guide
+- code of conduct
+- issue templates
+- pull request template
+- GitHub Actions verification workflow
+
 ## Verify
 
 Verify the starterkit itself:
@@ -194,3 +206,7 @@ kyle/06-ops/vault-foldering-rules.md
 ```
 
 Do not rename a mature existing vault just to match this template. Keep existing domain folders when they are already clear and stable.
+
+## License
+
+MIT License. See `LICENSE`.
