@@ -1,0 +1,31 @@
+name: Bug report
+description: Report a starterkit bug
+title: "Bug: "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction
+      description: Include commands and output. Do not include secrets.
+      value: |
+        ```bash
+        bash scripts/verify-starterkit.sh
+        ```
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, shell, agent surface, and whether this is Conductor.
+    validations:
+      required: false

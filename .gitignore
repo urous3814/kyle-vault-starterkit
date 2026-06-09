@@ -1,0 +1,11 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+.context/
+.claude/agents
+kyle
+*.starterkit-backup.*
+node_modules/
+tmp/
+*.log
