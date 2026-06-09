@@ -52,6 +52,14 @@ grep -q 'verify-starterkit.sh' "$starterkit_root/README.md" ||
   fail "README.md must document starterkit verification"
 grep -q -- '--vault-name' "$starterkit_root/README.md" ||
   fail "README.md must document vault name configuration"
+grep -q 'Fast Start' "$starterkit_root/README.md" ||
+  fail "README.md must include a Fast Start section"
+grep -q -- '--install-claude-skill' "$starterkit_root/README.md" ||
+  fail "README.md must document Claude skill installation"
+grep -q -- '--install-agent-skills' "$starterkit_root/README.md" ||
+  fail "README.md must document combined agent skill installation"
+grep -q -- '--skip-repo-files' "$starterkit_root/README.md" ||
+  fail "README.md must document skill-only installation without repo files"
 grep -q 'MIT License' "$starterkit_root/LICENSE" ||
   fail "LICENSE must be MIT"
 
@@ -96,6 +104,14 @@ grep -q 'STARTERKIT_DRY_RUN' "$skill_dir/scripts/install-starterkit.sh" ||
   fail "installer must support dry-run mode"
 grep -q 'STARTERKIT_FORCE' "$skill_dir/scripts/install-starterkit.sh" ||
   fail "installer must support explicit force mode"
+grep -q 'STARTERKIT_INSTALL_CLAUDE_SKILL' "$skill_dir/scripts/install-starterkit.sh" ||
+  fail "installer must support Claude skill installation"
+grep -q -- '--install-claude-skill' "$skill_dir/scripts/install-starterkit.sh" ||
+  fail "installer must support --install-claude-skill"
+grep -q -- '--install-agent-skills' "$skill_dir/scripts/install-starterkit.sh" ||
+  fail "installer must support --install-agent-skills"
+grep -q -- '--skip-repo-files' "$skill_dir/scripts/install-starterkit.sh" ||
+  fail "installer must support --skip-repo-files"
 grep -q 'STARTERKIT_CREATE_ONBOARDING' "$skill_dir/scripts/install-starterkit.sh" ||
   fail "installer must support onboarding creation control"
 grep -q 'STARTERKIT_VAULT_NAME' "$skill_dir/scripts/install-starterkit.sh" ||

@@ -4,6 +4,8 @@ set -euo pipefail
 STARTERKIT_DRY_RUN="${STARTERKIT_DRY_RUN:-0}"
 STARTERKIT_FORCE="${STARTERKIT_FORCE:-0}"
 STARTERKIT_INSTALL_CODEX_SKILL="${STARTERKIT_INSTALL_CODEX_SKILL:-0}"
+STARTERKIT_INSTALL_CLAUDE_SKILL="${STARTERKIT_INSTALL_CLAUDE_SKILL:-0}"
+STARTERKIT_CREATE_REPO_FILES="${STARTERKIT_CREATE_REPO_FILES:-1}"
 STARTERKIT_CREATE_WORKSPACE_FILES="${STARTERKIT_CREATE_WORKSPACE_FILES:-1}"
 STARTERKIT_CREATE_VAULT="${STARTERKIT_CREATE_VAULT:-1}"
 STARTERKIT_CREATE_ONBOARDING="${STARTERKIT_CREATE_ONBOARDING:-auto}"
@@ -21,6 +23,9 @@ Options:
   --dry-run                 Print actions without writing files.
   --force                   Backup and replace changed existing files.
   --install-codex-skill     Copy this skill into $CODEX_HOME/skills/kyle-vault-workspace.
+  --install-claude-skill    Copy this skill into $CLAUDE_HOME/skills/kyle-vault-workspace.
+  --install-agent-skills    Install both Codex and Claude Code skills.
+  --skip-repo-files         Do not install repo AGENTS.md/CLAUDE.md/conductor files.
   --skip-workspace-files    Do not install parent workspace AGENTS.md/CLAUDE.md.
   --skip-vault              Do not create or seed the shared vault.
   --with-onboarding         Create kyle/06-ops/ONBOARDING.md from the template.
@@ -31,6 +36,8 @@ Environment:
   STARTERKIT_DRY_RUN=1
   STARTERKIT_FORCE=1
   STARTERKIT_INSTALL_CODEX_SKILL=1
+  STARTERKIT_INSTALL_CLAUDE_SKILL=1
+  STARTERKIT_CREATE_REPO_FILES=0
   STARTERKIT_CREATE_WORKSPACE_FILES=0
   STARTERKIT_CREATE_VAULT=0
   STARTERKIT_CREATE_ONBOARDING=1|0|auto
@@ -162,6 +169,24 @@ append_git_exclude() {
   grep -qxF "$pattern" "$git_dir/info/exclude" 2>/dev/null || printf '\n%s\n' "$pattern" >> "$git_dir/info/exclude"
 }
 
+install_agent_skill() {
+  local agent_name="$1"
+  local target_dir="$2"
+
+  run mkdir -p "$(dirname -- "$target_dir")"
+  if [ -e "$target_dir" ] || [ -L "$target_dir" ]; then
+    if [ "$STARTERKIT_FORCE" != "1" ]; then
+      log "preserved existing $agent_name skill: $target_dir"
+      return 0
+    fi
+
+    run rm -rf "$target_dir"
+  fi
+
+  run cp -R "$skill_dir" "$target_dir"
+  log "installed $agent_name skill: $target_dir"
+}
+
 should_create_onboarding() {
   case "$STARTERKIT_CREATE_ONBOARDING" in
     1|yes|true)
@@ -234,6 +259,19 @@ while [ "$#" -gt 0 ]; do
       ;;
     --install-codex-skill)
       STARTERKIT_INSTALL_CODEX_SKILL=1
+      shift
+      ;;
+    --install-claude-skill)
+      STARTERKIT_INSTALL_CLAUDE_SKILL=1
+      shift
+      ;;
+    --install-agent-skills)
+      STARTERKIT_INSTALL_CODEX_SKILL=1
+      STARTERKIT_INSTALL_CLAUDE_SKILL=1
+      shift
+      ;;
+    --skip-repo-files)
+      STARTERKIT_CREATE_REPO_FILES=0
       shift
       ;;
     --skip-workspace-files)
@@ -312,7 +350,9 @@ log "workspace_root=$workspace_root"
 log "vault_name=$vault_name"
 log "vault_root=$vault_root"
 
-copy_tree_files "$assets_dir/repo" "$repo_root"
+if [ "$STARTERKIT_CREATE_REPO_FILES" = "1" ]; then
+  copy_tree_files "$assets_dir/repo" "$repo_root"
+fi
 
 if [ "$STARTERKIT_CREATE_WORKSPACE_FILES" = "1" ] && [ "$workspace_root" != "$repo_root" ]; then
   copy_tree_files "$assets_dir/workspace" "$workspace_root"
@@ -335,20 +375,12 @@ append_git_exclude "$repo_root" /.env.local
 
 if [ "$STARTERKIT_INSTALL_CODEX_SKILL" = "1" ]; then
   codex_home="${CODEX_HOME:-$HOME/.codex}"
-  codex_skill_dir="$codex_home/skills/kyle-vault-workspace"
-  run mkdir -p "$(dirname -- "$codex_skill_dir")"
-  if [ -e "$codex_skill_dir" ] || [ -L "$codex_skill_dir" ]; then
-    if [ "$STARTERKIT_FORCE" != "1" ]; then
-      log "preserved existing Codex skill: $codex_skill_dir"
-    else
-      run rm -rf "$codex_skill_dir"
-      run cp -R "$skill_dir" "$codex_skill_dir"
-      log "installed Codex skill: $codex_skill_dir"
-    fi
-  else
-    run cp -R "$skill_dir" "$codex_skill_dir"
-    log "installed Codex skill: $codex_skill_dir"
-  fi
+  install_agent_skill "Codex" "$codex_home/skills/kyle-vault-workspace"
+fi
+
+if [ "$STARTERKIT_INSTALL_CLAUDE_SKILL" = "1" ]; then
+  claude_home="${CLAUDE_HOME:-$HOME/.claude}"
+  install_agent_skill "Claude Code" "$claude_home/skills/kyle-vault-workspace"
 fi
 
 log "starterkit install complete"

@@ -11,6 +11,33 @@ This starterkit installs a reusable coding-agent setup for repos that need:
 - standard vault foldering rules
 - optional `ONBOARDING.md` creation for first-day repo context
 
+## Fast Start
+
+```bash
+git clone https://github.com/urous3814/kyle-vault-starterkit.git
+cd kyle-vault-starterkit
+
+# Install both local agent skills.
+bash skill/kyle-vault-workspace/scripts/install-starterkit.sh \
+  --repo-root "$PWD" \
+  --skip-repo-files \
+  --skip-vault \
+  --skip-workspace-files \
+  --install-agent-skills
+
+# Install the starterkit into a target repo/workspace.
+bash skill/kyle-vault-workspace/scripts/install-starterkit.sh \
+  --repo-root /path/to/repo \
+  --workspace-root /path/to/workspace \
+  --vault-name kyle \
+  --with-onboarding
+```
+
+After installing agent skills:
+
+- Codex can use `kyle-vault-workspace` from `${CODEX_HOME:-$HOME/.codex}/skills/kyle-vault-workspace`.
+- Claude Code can use `kyle-vault-workspace` from `${CLAUDE_HOME:-$HOME/.claude}/skills/kyle-vault-workspace`.
+
 ## Layout
 
 ```text
@@ -131,11 +158,27 @@ The setup script:
 
 Run scripts should bind app servers to `CONDUCTOR_PORT` when the project supports configurable ports.
 
-## Install As A Codex Skill
+## Install As Agent Skills
+
+Install both Codex and Claude Code skills:
 
 ```bash
 bash skill/kyle-vault-workspace/scripts/install-starterkit.sh \
-  --repo-root /path/to/repo \
+  --repo-root "$PWD" \
+  --skip-repo-files \
+  --skip-vault \
+  --skip-workspace-files \
+  --install-agent-skills
+```
+
+Install only Codex:
+
+```bash
+bash skill/kyle-vault-workspace/scripts/install-starterkit.sh \
+  --repo-root "$PWD" \
+  --skip-repo-files \
+  --skip-vault \
+  --skip-workspace-files \
   --install-codex-skill
 ```
 
@@ -144,6 +187,27 @@ This copies the skill to:
 ```text
 ${CODEX_HOME:-$HOME/.codex}/skills/kyle-vault-workspace
 ```
+
+Install only Claude Code:
+
+```bash
+bash skill/kyle-vault-workspace/scripts/install-starterkit.sh \
+  --repo-root "$PWD" \
+  --skip-repo-files \
+  --skip-vault \
+  --skip-workspace-files \
+  --install-claude-skill
+```
+
+This copies the skill to:
+
+```text
+${CLAUDE_HOME:-$HOME/.claude}/skills/kyle-vault-workspace
+```
+
+Claude Code skills use the same `SKILL.md` package shape as this starterkit. The directory name and `name` field are both `kyle-vault-workspace`.
+
+Use `--skip-repo-files` for skill-only installation so the starterkit does not copy repo templates into the starterkit checkout itself.
 
 ## Repository Defaults
 

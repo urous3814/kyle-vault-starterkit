@@ -33,6 +33,9 @@ The installer is conservative:
 - `--vault-name NAME` creates the shared vault at `$workspace_root/NAME` while keeping the repo link as `./kyle`.
 - `--vault-root PATH` uses an exact shared vault path; do not combine it with `--vault-name`.
 - `--install-codex-skill` copies this skill to `$CODEX_HOME/skills/kyle-vault-workspace`.
+- `--install-claude-skill` copies this skill to `$CLAUDE_HOME/skills/kyle-vault-workspace`.
+- `--install-agent-skills` installs both Codex and Claude Code skill copies.
+- `--skip-repo-files` skips repo template installation for skill-only setup.
 
 ## What Gets Installed
 

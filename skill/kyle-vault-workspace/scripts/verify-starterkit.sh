@@ -75,6 +75,14 @@ grep -q 'STARTERKIT_DRY_RUN' "$skill_dir/scripts/install-starterkit.sh" ||
   fail "installer must support dry-run mode"
 grep -q 'STARTERKIT_FORCE' "$skill_dir/scripts/install-starterkit.sh" ||
   fail "installer must support explicit force mode"
+grep -q 'STARTERKIT_INSTALL_CLAUDE_SKILL' "$skill_dir/scripts/install-starterkit.sh" ||
+  fail "installer must support Claude skill installation"
+grep -q -- '--install-claude-skill' "$skill_dir/scripts/install-starterkit.sh" ||
+  fail "installer must support --install-claude-skill"
+grep -q -- '--install-agent-skills' "$skill_dir/scripts/install-starterkit.sh" ||
+  fail "installer must support --install-agent-skills"
+grep -q -- '--skip-repo-files' "$skill_dir/scripts/install-starterkit.sh" ||
+  fail "installer must support --skip-repo-files"
 grep -q 'STARTERKIT_CREATE_ONBOARDING' "$skill_dir/scripts/install-starterkit.sh" ||
   fail "installer must support onboarding creation control"
 grep -q 'STARTERKIT_VAULT_NAME' "$skill_dir/scripts/install-starterkit.sh" ||
